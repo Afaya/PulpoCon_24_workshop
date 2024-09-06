@@ -1,0 +1,37 @@
+@import '@/styles/mixins';
+
+.travelDetail {
+  border: var(--border);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 var(--space-sm);
+  }
+
+  &__actionsEdit {
+    @include buttonStyle();
+  }
+
+  &__image {
+    width: 98%;
+    height: auto;
+  }
+
+  &__textWrapper {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  &__textWrapperdescription {
+    flex-direction: column;
+  }
+
+  &__mainText {
+    font-weight: var(--text-bold);
+  }
+}

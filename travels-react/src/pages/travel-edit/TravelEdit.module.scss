@@ -1,0 +1,33 @@
+@import '@/styles/mixins';
+
+.travelEdit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+
+  width: 30rem;
+  margin: var(--space-xl) auto;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__rowField {
+    min-width: 20rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-md);
+  }
+
+  &__actionsBtn {
+    @include buttonStyle();
+  }
+
+  &__actionsSecondaryBtn {
+    @include secondaryButton();
+  }
+}

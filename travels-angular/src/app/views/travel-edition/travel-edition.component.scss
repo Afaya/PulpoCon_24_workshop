@@ -1,0 +1,34 @@
+
+@import '../../../../public/scss/mixins';
+
+.travel-edit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+
+  width: 30rem;
+  margin: var(--space-xl) auto;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__row-field {
+    min-width: 20rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-md);
+  }
+
+  &__actions-btn {
+    @include buttonStyle();
+  }
+
+  &__actions-secondary-btn {
+    @include secondaryButton();
+  }
+}

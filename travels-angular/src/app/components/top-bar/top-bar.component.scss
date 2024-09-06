@@ -1,0 +1,30 @@
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: var(--space-sm);
+
+  color: var(--text-color);
+  border-bottom: var(--border);
+
+  &__logo {
+    width: 3em;
+    height: 3.5em;
+  }
+
+  &__menu {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+  }
+
+  &__menu-option {
+    text-decoration: none;
+    color: var(--light-green);
+
+    &:hover {
+      color: var(--dark-green);
+    }
+  }
+}

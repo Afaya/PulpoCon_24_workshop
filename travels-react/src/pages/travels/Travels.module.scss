@@ -1,0 +1,33 @@
+@import '@/styles/medias';
+@import '@/styles/mixins';
+
+.travelList {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-md);
+
+  &__add {
+    @include buttonStyle();
+  }
+
+  &__wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: var(--space-lg);
+
+    margin-top: var(--space-lg);
+
+    @include media(md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include media(sm) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  &__travel {
+    display: contents;
+  }
+}

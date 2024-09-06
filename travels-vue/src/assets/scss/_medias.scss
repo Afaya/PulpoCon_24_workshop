@@ -1,0 +1,41 @@
+$grid-breakpoints: (
+  xs: 0,
+  lxs: 576px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+  mlg: 1440px,
+  xl: 1700px,
+  xxl: 1920px,
+  'extra-large': 2500px
+) !default;
+
+@mixin media($breakpoint) {
+  @media only screen and (max-width: map-get($grid-breakpoints, #{$breakpoint})) {
+    @content;
+  }
+}
+
+@mixin media-min($breakpoint) {
+  @media only screen and (min-width: map-get($grid-breakpoints, #{$breakpoint})) {
+    @content;
+  }
+}
+
+@mixin media-between($min-breakpoint, $max-breakpoint) {
+  @media only screen and (min-width: map-get($grid-breakpoints, #{$min-breakpoint})) and (max-width: map-get($grid-breakpoints, #{$max-breakpoint})) {
+    @content;
+  }
+}
+
+@mixin height-media($breakpoint) {
+  @media only screen and (max-height: map-get($grid-breakpoints, #{$breakpoint})) {
+    @content;
+  }
+}
+
+@mixin height-media-min($breakpoint) {
+  @media only screen and (min-height: map-get($grid-breakpoints, #{$breakpoint})) {
+    @content;
+  }
+}

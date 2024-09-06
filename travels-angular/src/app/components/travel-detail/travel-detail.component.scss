@@ -1,0 +1,38 @@
+@import '../../../../public/scss/mixins';
+
+.travel-detail {
+  border: var(--border);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 var(--space-sm);
+  }
+
+  &__actions-edit {
+    @include buttonStyle();
+
+    width: 5rem;
+  }
+
+  &__image {
+    width: 98%;
+  }
+
+  &__text-wrapper {
+    display: flex;
+    gap: var(--space-sm);
+
+    &--description {
+      flex-direction: column;
+    }
+  }
+
+  &__main-text {
+    font-weight: var(--text-bold);
+  }
+}

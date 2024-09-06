@@ -1,0 +1,23 @@
+@mixin buttonStyle() {
+  width: 10rem;
+  height: 2rem;
+  margin: var(--space-sm) 0;
+  background-color: var(--yellow);
+  border: 1px solid var(--yellow);
+  border-radius: 0.5rem;
+  color: var(--dark-blue);
+
+  &:hover {
+    background-color: var(--light-green);
+  }
+}
+
+@mixin secondaryButton() {
+  background-color: var(--dark-green);
+  color: var(--yellow);
+  border: 1px solid var(--dark-green);
+  width: 10rem;
+  height: 2rem;
+  margin: var(--space-sm) 0;
+  border-radius: 0.5rem;
+}

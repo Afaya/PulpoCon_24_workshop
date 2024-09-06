@@ -1,0 +1,24 @@
+@import 'medias';
+
+:root {
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 20px;
+  --space-xl: 48px;
+
+  --dark-green: #1c5560;
+  --light-green: #79ae92;
+  --yellow: #fbffcd;
+  --dark-blue: #001f36;
+
+  --disabled-color: #cfd1cd;
+
+  --text-color: var(--dark-green);
+  --text-bold: 800;
+  --text-xl: 2em;
+  --text-lg: 1.5em;
+  --text-md: 1em;
+  --text-sm: 0.8em;
+
+  --border: 1px solid var(--light-green);
+}
