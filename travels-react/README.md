@@ -1045,36 +1045,48 @@ Si te fijas, aquí lo que hacemos es crear dos types, uno para los datos que va 
 Después de tener el store, necesitamos crear el archivo src/providers/travel-store-provider.tsx y de nuevo vamos a tomar la configuración base de un provider de Zustand:
 
 ```typescript
-import { myTravels } from '@/data/Travel';
-import { ITravel } from '@/types/Travel';
-import { createStore } from 'zustand/vanilla';
+'use client';
 
-export type TravelState = {
-  travelList: ITravel[];
+import { type ReactNode, createContext, useRef, useContext } from 'react';
+import { useStore } from 'zustand';
+
+import {
+  type TravelStore,
+  createTravelStore,
+  initTravelStore,
+} from '@/stores/travel-store';
+
+export type TravelStoreApi = ReturnType<typeof createTravelStore>;
+
+export const TravelStoreContext = createContext<TravelStoreApi | undefined>(
+  undefined
+);
+
+export interface TravelStoreProviderProps {
+  children: ReactNode;
+}
+
+export const TravelStoreProvider = ({ children }: TravelStoreProviderProps) => {
+  const storeRef = useRef<TravelStoreApi>();
+  if (!storeRef.current) {
+    storeRef.current = createTravelStore(initTravelStore());
+  }
+
+  return (
+    <TravelStoreContext.Provider value={storeRef.current}>
+      {children}
+    </TravelStoreContext.Provider>
+  );
 };
 
-export type TravelActions = {
-  addTravel: (currentTravel: ITravel) => void;
-};
+export const useTravelStore = <T>(selector: (store: TravelStore) => T): T => {
+  const travelStoreContext = useContext(TravelStoreContext);
 
-export type TravelStore = TravelState & TravelActions;
+  if (!travelStoreContext) {
+    throw new Error(`useTravelStore must be used within TravelStoreProvider`);
+  }
 
-export const defaultInitState: TravelState = {
-  travelList: [],
-};
-
-export const initTravelStore = (): TravelState => {
-  return { travelList: structuredClone(myTravels) };
-};
-
-export const createTravelStore = (
-  initState: TravelState = defaultInitState
-) => {
-  return createStore<TravelStore>()((set) => ({
-    ...initState,
-    addTravel: (currentTravel: ITravel) =>
-      set((state) => ({ travelList: [...state.travelList, currentTravel] })),
-  }));
+  return useStore(travelStoreContext, selector);
 };
 ```
 
