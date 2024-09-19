@@ -6,14 +6,6 @@
 
 [Page Router]('https://nextjs.org/docs/pages/building-your-application/routing'),
 
-\_app.tsx: página que contiene la estructura de una app react.
-\_document.tsx: página que crea un archivo html válido.
-index.tsx: nuestra home.
-
-Luego por cada página que quiera añadir simplemente tienes que crear tu archivo tsx con el nombre que quieras que tenga la ruta, por ejemplo travels.tsx.
-
-Ahora sí, si necesitas que una página acepte parámetros entonces debes crear dentro de src/pages una carpeta con el nombre de la ruta, por ejemplo /travel-edit y luego dentro de ella un archivo que se llame [parametro].tsx. Y la ruta será /travel-edit/parametro.
-
 ```html
 <Link href="/travels" className="topbar__menuOption">Travels List</Link>
 ```
@@ -108,7 +100,12 @@ export const TravelDetail = ({ currentTravel }: TravelDetailProps) => {
     <>
       <main className={styles.travelDetail}>
         <div className={styles.travelDetail__actions}>
-          <button className={styles.travelDetail__actionsEdit}>Edit</button>
+          <button
+            className={styles.travelDetail__actionsEdit}
+            onClick={() => editTravel()}
+          >
+            Edit
+          </button>
         </div>
 
         <Image
@@ -174,73 +171,18 @@ export default function Travels() {
 
 ### 5. Vamos a añadir lógica y validaciones al formulario.
 
-**src/data/Travel.ts**
-
-```typescript
-export const defaultTravel: ITravel = {
-  id: 0,
-  country: '',
-  description: '',
-  city: '',
-  date: new Date(),
-  image: '',
-};
-```
-
-**src/pages/travel-edit/[id].tsx**
-
-```typescript
 const [currentTravel, setCurrentTravel] = useState(
-  structuredClone(defaultTravel)
+structuredClone(defaultTravel)
 );
 
-const [currentType, setCurrentType] = useState('');
-```
-
-```html
-<div className={styles.travelEdit__row}>
-            <label htmlFor="country">País:</label>
-
-            <input
-              className={styles.travelEdit__rowField}
-              type="text"
-              id="country"
-              name="country"
-              value={currentTravel.country}
-              onChange={(e) => setCurrentTravel({...currentTravel, country: e.target.value})}
-            />
-          </div>
-
-          <div className={styles.travelEdit__row}>
-            <label htmlFor="city">Ciudad:</label>
-
-            <input className={styles.travelEdit__rowField} type="text" id="city" name="city" value={currentTravel.city}
-              onChange={(e) => setCurrentTravel({...currentTravel, city: e.target.value})} />
-          </div>
-
-          <div className={styles.travelEdit__row}>
-            <label htmlFor="date">Fecha:</label>
-
-            <input className={styles.travelEdit__rowField} type="date" id="date" name="date" value={currentTravel.date.toString()}
-               onChange={(e) => setCurrentTravel({...currentTravel, date: new Date(e.target.value)})} />
-          </div>
-
-          <div className={styles.travelEdit__row}>
-            <label htmlFor="description">Descripción:</label>
-
-            <textarea
-              className={styles.travelEdit__rowField}
-              id="description"
-              name="description"
-              rows={20}
-              value={currentTravel.description}
-              onChange={(e) => setCurrentTravel({...currentTravel, description: e.target.value})}
-            ></textarea>
-          </div>
-
-```
-
-**Combo**
+<input
+className={styles.travelEdit\_\_rowField}
+type="text"
+id="country"
+name="country"
+value={currentTravel.country}
+onChange={(e) => setCurrentTravel({...currentTravel, country: e.target.value})}
+/>
 
 **src/types/Travel.ts**
 
@@ -268,185 +210,19 @@ export const TravelTypeOptions: ComboboxOption[] = [
     value: 'Desconexión relax',
   },
 ];
+
+export const defaultTravel: ITravel = {
+  id: 0,
+  country: '',
+  description: '',
+  city: '',
+  date: new Date(),
+  image: '',
+};
 ```
 
 **src/pages/travel-edit/[id].tsx**
-
-```typescript
-import { defaultTravel, TravelTypeOptions } from '../../data/Travel';
-```
-
-```html
-<div className={styles.travelEdit__row}>
-    <label htmlFor="type">Tipo de viaje:</label>
-
-    <select className={styles.travelEdit__rowField} name="select" value={currentType} onChange={(e) => setCurrentType(e.target.value)}>
-        {TravelTypeOptions.map(option =>
-            <option key={option.id} value={option.id}>{option.value}</option>
-        )}
-    </select>
-</div>
-```
-
-**Botones**
-
-```html
-<div className="{styles.travelEdit__actions}">
-  <button
-    className="{styles.travelEdit__actionsSecondaryBtn}"
-    onClick="{onCancel}"
-  >
-    Cancelar
-  </button>
-  <button className="{styles.travelEdit__actionsBtn}" onClick="{onSave}">
-    Guardar
-  </button>
-</div>
-```
-
-```typescript
-const onCancel = () => console.log('he cancelado');
-
-const onSave = () =>
-  console.log('he actualizado el viaje a', currentTravel, currentType);
-```
-
 **React-hook-form**
-
-```typescript
-interface ITravelEdit extends ITravel {
-  currentType: string;
-}
-```
-
-```typescript
-const {
-  register,
-  handleSubmit,
-  formState: { errors },
-} = useForm<ITravelEdit>({
-  defaultValues: { ...structuredClone(defaultTravel), currentType: 'nature' },
-});
-
-const onSave: SubmitHandler<ITravel> = (data) => console.log(data);
-```
-
-```tsx
-return (
-  <>
-    <main className={styles.main}>
-      <form className={styles.travelEdit}>
-        <div className={styles.travelEdit__row}>
-          <label htmlFor="type">Tipo de viaje:</label>
-
-          <select
-            className={
-              errors.currentType
-                ? styles.travelEdit__rowFieldError
-                : styles.travelEdit__rowField
-            }
-            {...register('currentType', { required: true })}
-          >
-            {TravelTypeOptions.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.value}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className={styles.travelEdit__row}>
-          <label htmlFor="country">País:</label>
-
-          <input
-            className={styles.travelEdit__rowField}
-            type="text"
-            id="country"
-            {...register('country')}
-          />
-        </div>
-
-        <div className={styles.travelEdit__row}>
-          <label htmlFor="city">Ciudad:</label>
-
-          <input
-            className={
-              errors.city
-                ? styles.travelEdit__rowFieldError
-                : styles.travelEdit__rowField
-            }
-            type="text"
-            id="city"
-            {...register('city', { required: true, minLength: 3 })}
-          />
-        </div>
-
-        <div className={styles.travelEdit__row}>
-          <label htmlFor="date">Fecha:</label>
-
-          <input
-            className={
-              errors.date
-                ? styles.travelEdit__rowFieldError
-                : styles.travelEdit__rowField
-            }
-            type="date"
-            id="date"
-            {...register('date', { required: true })}
-          />
-        </div>
-
-        <div className={styles.travelEdit__row}>
-          <label htmlFor="description">Descripción:</label>
-
-          <textarea
-            className={styles.travelEdit__rowField}
-            id="description"
-            rows={20}
-            {...register('description')}
-          ></textarea>
-        </div>
-
-        <label className={styles.travelEdit__error}>
-          {Object.keys(errors).length ? 'Completa los campos obligatorios' : ''}
-        </label>
-      </form>
-
-      <div className={styles.travelEdit__actions}>
-        <button
-          className={styles.travelEdit__actionsSecondaryBtn}
-          onClick={onCancel}
-        >
-          Cancelar
-        </button>
-        <button
-          className={styles.travelEdit__actionsBtn}
-          onClick={handleSubmit(onSave)}
-        >
-          Guardar
-        </button>
-      </div>
-    </main>
-  </>
-);
-```
-
-```scss
-&__rowField,
-&__rowFieldError {
-  min-width: 20rem;
-}
-
-&__rowFieldError {
-  border-color: red;
-}
-
-&__error {
-  color: red;
-}
-```
-
-**eliminar useState ya no usamos**
 
 ```tsx
 import styles from './TravelEdit.module.scss';
@@ -456,9 +232,10 @@ import { ITravel } from '@/types/Travel';
 
 interface ITravelEdit extends ITravel {
   currentType: string;
+  dateAsString: string;
 }
 
-export default function Travels() {
+export default function TravelEdit() {
   const {
     register,
     handleSubmit,
@@ -531,7 +308,7 @@ export default function Travels() {
               }
               type="date"
               id="date"
-              {...register('date', { required: true })}
+              {...register('dateAsString', { required: true })}
             />
           </div>
 
@@ -570,6 +347,21 @@ export default function Travels() {
       </main>
     </>
   );
+}
+```
+
+```scss
+&__rowField,
+&__rowFieldError {
+  min-width: 20rem;
+}
+
+&__rowFieldError {
+  border-color: red;
+}
+
+&__error {
+  color: red;
 }
 ```
 
@@ -766,9 +558,10 @@ import { useTravelStore } from '@/providers/travel-store-provider';
 
 interface ITravelEdit extends ITravel {
   currentType: string;
+  dateAsString: string;
 }
 
-export default function Travels() {
+export default function TravelEdit() {
   const NATURE_OPTION = 'nature';
 
   const router = useRouter();
@@ -791,7 +584,7 @@ export default function Travels() {
 
   const currentTravel = travelList.find((travel) => travel.id === currentId);
 
-  if (currentId > 0 && currentTravel) {
+  if (currentTravel) {
     const currentType = currentTravel.image
       ? currentTravel.image.replace('/', '').replace('.webp', '')
       : NATURE_OPTION;
@@ -800,6 +593,8 @@ export default function Travels() {
     setValue('date', currentTravel.date);
     setValue('description', currentTravel?.description);
     setValue('currentType', currentType);
+    const currentDateAsString = currentTravel.date.toISOString().split('T')[0];
+    setValue('dateAsString', currentDateAsString);
   }
 
   const onSave: SubmitHandler<ITravel> = (data) => console.log(data);
@@ -866,7 +661,7 @@ export default function Travels() {
               }
               type="date"
               id="date"
-              {...register('date', { required: true })}
+              {...register('dateAsString', { required: true })}
             />
           </div>
 
@@ -906,26 +701,6 @@ export default function Travels() {
     </>
   );
 }
-```
-
-**Fecha**
-
-```typescript
-interface ITravelEdit extends ITravel {
-  currentType: string;
-  dateAsString: string;
-}
-```
-
-```typescript
-const currentDateAsString = currentTravel.date.toISOString().split('T')[0];
-setValue('dateAsString', currentDateAsString);
-```
-
-```
-<input className={errors.date ? styles.travelEdit__rowFieldError :
-styles.travelEdit__rowField} type="date" id="date" {...register("dateAsString",
-{ required: true})} />
 ```
 
 ### 7. Crea la funcionalidad de guardar cambios.
@@ -978,6 +753,10 @@ const editTravel = (newTravel: ITravel, currentId: Number) => {
 **src/pages/travel-edit/[id].tsx**
 
 ```typescript
+if (currentTravel) {
+  fillForm();
+}
+
 const fillForm = () => {
   const initialData =
     currentId === 0 ? structuredClone(defaultTravel) : currentTravel;
@@ -995,26 +774,10 @@ const fillForm = () => {
     setValue('currentType', currentType);
   }
 };
-
-if (currentId > 0 && currentTravel) {
-  fillForm();
-}
 ```
 
 ```typescript
 const onCancel = () => fillForm();
-```
-
-**src/components/travelDetail/index.tsx**
-
-```
-const router = useRouter();
-
-const editTravel = () => router.push(`${URLS.EDIT}${currentTravel.id}`);
-```
-
-```
-<button className={styles.travelDetail__actionsEdit} onClick={() => editTravel()}>Edit</button>
 ```
 
 **Código completo**
