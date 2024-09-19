@@ -181,80 +181,6 @@ import { ITravel } from '../types/Travel';
 
 ### 5. Vamos a añadir lógica y validaciones al formulario.
 
-**src/data/Travel.ts**
-
-```typescript
-export const defaultTravel: ITravel = {
-  id: 0,
-  country: '',
-  description: '',
-  city: '',
-  date: new Date(),
-  image: '',
-};
-```
-
-**src/views/TravelEdition.vue**
-
-```typescript
-const currentTravel = ref<ITravel>(structuredClone(defaultTravel));
-
-const currentType = ref('');
-```
-
-```html
-<div class="travel-edit__row">
-  <label for="country">País:</label>
-
-  <input
-    v-model="currentTravel.country"
-    class="travel-edit__row-field"
-    type="text"
-    id="country"
-    name="country"
-  />
-</div>
-
-<div class="travel-edit__row">
-  <label for="city">Ciudad:</label>
-
-  <input
-    v-model="currentTravel.city"
-    class="travel-edit__row-field"
-    type="text"
-    id="city"
-    name="city"
-  />
-</div>
-
-<div class="travel-edit__row">
-  <label for="date">Fecha:</label>
-
-  <input
-    v-model="currentTravel.date"
-    class="travel-edit__row-field"
-    type="date"
-    id="date"
-    name="date"
-  />
-</div>
-
-<div class="travel-edit__row">
-  <label for="description">Descripción:</label>
-
-  <textarea
-    v-model="currentTravel.description"
-    class="travel-edit__row-field"
-    type="text"
-    id="description"
-    name="description"
-    rows="20"
-  ></textarea>
-</div>
-```
-
-**Rellenar el combo**
-
 **src/types/Travel.ts**
 
 ```
@@ -281,96 +207,15 @@ export const TravelTypeOptions: ComboboxOption[] = [
     value: 'Desconexión relax',
   },
 ];
-```
 
-**src/views/TravelEdition.vue**
-
-```typescript
-import { ref, watch, onMounted, computed } from 'vue';
-import { defaultTravel, TravelTypeOptions } from '../data/Travel';
-```
-
-```html
-<div class="travel-edit__row">
-  <label for="type">Tipo de viaje:</label>
-
-  <select v-model="currentType" class="travel-edit__row-field" name="select">
-    <option
-      v-for="option in TravelTypeOptions"
-      :key="option.id"
-      :value="option.id"
-    >
-      {{ option.value }}
-    </option>
-  </select>
-</div>
-```
-
-**Sacar botones fuera**
-
-```html
-<template>
-  <div class="travel-edit">
-    <form class="travel-edit__form">
-      //Aquí todo el contenido que ya tenías, salvo los botones
-    </form>
-
-    <div class="travel-edit__actions">
-      <button
-        class="travel-edit__actions-secondary-btn"
-        type="reset"
-        @click="onCancel"
-      >
-        Cancelar
-      </button>
-
-      <button class="travel-edit__actions-btn" @click="onSave">Guardar</button>
-    </div>
-  </div>
-</template>
-```
-
-```typescript
-const onCancel = () => console.log('he cancelado');
-
-const onSave = () =>
-  console.log(
-    'he actualizado el viaje a',
-    currentTravel.value,
-    currentType.value
-  );
-```
-
-**Formatear fecha**
-
-```typescript
-const currentDateString = ref('');
-
-onMounted(() => formatTravelDate(currentTravel.value.date));
-
-const formatTravelDate = (newDate: Date) =>
-  (currentDateString.value = newDate.toISOString().split('T')[0]);
-```
-
-```typescript
-watch(
-  () => currentTravel.value.date,
-  (newValue: Date) => formatTravelDate(newValue)
-);
-```
-
-```html
-<div class="travel-edit__row">
-  <label for="date">Fecha:</label>
-
-  <input
-    v-model="currentDateString"
-    class="travel-edit__row-field"
-    type="date"
-    id="date"
-    name="date"
-  />
-</div>
+export const defaultTravel: ITravel = {
+  id: 0,
+  country: '',
+  description: '',
+  city: '',
+  date: new Date(),
+  image: '',
+};
 ```
 
 **vee-validate y yup**
@@ -378,8 +223,14 @@ watch(
 **src/views/TravelEdition.vue**
 
 ```typescript
+import { ITravel } from '../types/Travel';
+import { defaultTravel, TravelTypeOptions } from '../data/Travel';
+import { ref, onMounted, computed } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+import { useRoute } from 'vue-router';
+import { navigateTo } from '../helpers/routes';
+import { URLS } from '../data/AppUrls';
 
 const { errors, meta, defineField } = useForm({
   validationSchema: yup.object({
@@ -389,98 +240,188 @@ const { errors, meta, defineField } = useForm({
   }),
 });
 
+const route = useRoute();
+
+const currentTravel = ref<ITravel>(structureClone(defaultTravel));
+
 const [currentType, currentTypeAttrs] = defineField('currentType');
 
 const [currentDateString, currentDateStringAttrs] =
   defineField('currentDateString');
 
 const [currentCity, currentCityAttrs] = defineField('currentCity');
-```
 
-```typescript
-onMounted(() => initializeValues(currentTravel.value));
+const hasErrors = computed(() => Object.keys(errors.value).length);
+
+onMounted(() => {
+  initializeValues(currentTravel.value);
+});
 
 const initializeValues = (newTravel: ITravel) => {
   currentCity.value = newTravel.city;
   currentDateString.value = newTravel.date.toISOString().split('T')[0];
+  currentType.value = newTravel.image
+    ? newTravel.image.replace('src/assets/images/', '').replace('.webp', '')
+    : '';
 };
 
-watch(
-  () => currentTravel.value,
-  (newValue: ITravel) => initializeValues(newValue)
-);
-```
-
-```html
-<label for="type">Tipo de viaje*:</label>
-<select
-  v-model="currentType"
-  v-bind="currentTypeAttrs"
-  class="travel-edit__row-field"
-  name="select"
->
-  <option
-    v-for="option in TravelTypeOptions"
-    :key="option.id"
-    :value="option.id"
-  >
-    {{ option.value }}
-  </option>
-</select>
-```
-
-```html
-<span v-if="hasErrors" class="travel-edit__error">
-  Completa los campos obligatorios
-</span>
-```
-
-```typescript
-const hasErrors = computed(() => Object.keys(errors.value).length);
-```
-
-```scss
-&__error {
-  color: red;
-  border-color: red;
-}
-```
-
-```html
-<select
-  v-model="currentType"
-  v-bind="currentTypeAttrs"
-  :class="getInputClass('currentType')"
-  name="select"
-></select>
-```
-
-```typescript
 const getInputClass = (fieldName: string) => ({
   'travel-edit__row-field': true,
   'travel-edit__error':
     meta.value.touched && errors.value && errors.value[fieldName],
 });
+
+const onCancel = () => console.log('on cancel');
+
+const onSave = () => console.log('on save');
 ```
 
 ```html
-<button
-  class="travel-edit__actions-btn"
-  :disabled="!meta.valid"
-  @click="onSave"
->
-  Guardar
-</button>
+<div class="travel-edit">
+  <form v-if="currentTravel" class="travel-edit__form">
+    <div class="travel-edit__row">
+      <label for="type">Tipo de viaje*:</label>
+
+      <select
+        v-model="currentType"
+        v-bind="currentTypeAttrs"
+        :class="getInputClass('currentType')"
+        name="select"
+      >
+        <option
+          v-for="option in TravelTypeOptions"
+          :key="option.id"
+          :value="option.id"
+        >
+          {{ option.value }}
+        </option>
+      </select>
+    </div>
+
+    <div class="travel-edit__row">
+      <label for="country">País:</label>
+
+      <input
+        v-model="currentTravel.country"
+        class="travel-edit__row-field"
+        type="text"
+        id="country"
+        name="country"
+      />
+    </div>
+
+    <div class="travel-edit__row">
+      <label for="city">Ciudad*:</label>
+
+      <input
+        v-model="currentCity"
+        v-bind="currentCityAttrs"
+        :class="getInputClass('currentCity')"
+        type="text"
+        id="city"
+        name="city"
+      />
+    </div>
+
+    <div class="travel-edit__row">
+      <label for="date">Fecha*:</label>
+
+      <input
+        v-model="currentDateString"
+        v-bind="currentDateStringAttrs"
+        :class="getInputClass('currentDateString')"
+        type="date"
+        id="date"
+      />
+    </div>
+
+    <div class="travel-edit__row">
+      <label for="description">Descripción:</label>
+
+      <textarea
+        v-model="currentTravel.description"
+        class="travel-edit__row-field"
+        type="text"
+        id="description"
+        name="description"
+        rows="20"
+      ></textarea>
+    </div>
+  </form>
+
+  <div class="travel-edit__actions">
+    <button
+      class="travel-edit__actions-secondary-btn"
+      type="reset"
+      @click="onCancel"
+    >
+      Cancelar
+    </button>
+
+    <button
+      class="travel-edit__actions-btn"
+      :disabled="!meta.valid"
+      @click="onSave"
+    >
+      Guardar
+    </button>
+  </div>
+
+  <span v-if="hasErrors" class="travel-edit__error">
+    Completa los campos obligatorios
+  </span>
+</div>
 ```
 
 ```scss
-&__actions-btn {
-  @include buttonStyle();
+@import '../assets/scss/mixins';
 
-  &:disabled {
-    background-color: var(--disabled-color);
-    border-color: var(--disabled-color);
-    color: white;
+.travel-edit {
+  width: 30rem;
+  margin: var(--space-xl) auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__row-field {
+    min-width: 20rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-md);
+  }
+
+  &__error {
+    color: red;
+    border-color: red;
+  }
+
+  &__actions-btn {
+    @include buttonStyle();
+
+    &:disabled {
+      background-color: var(--disabled-color);
+      border-color: var(--disabled-color);
+      color: white;
+    }
+  }
+
+  &__actions-secondary-btn {
+    @include secondaryButton();
   }
 }
 ```
@@ -595,22 +536,6 @@ const getTravel = (currentId: number) => {
   currentTravel.value = travelFromList;
 
   initializeValues(currentTravel.value);
-};
-```
-
-```html
-<form v-if="currentTravel" class="travel-edit__form"></form>
-```
-
-**currentType**
-
-```typescript
-const initializeValues = (newTravel: ITravel) => {
-  currentCity.value = newTravel.city;
-  currentDateString.value = newTravel.date.toISOString().split('T')[0];
-  currentType.value = newTravel.image
-    ? newTravel.image.replace('src/assets/images/', '').replace('.webp', '')
-    : '';
 };
 ```
 
