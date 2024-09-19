@@ -2,6 +2,10 @@
 
 ### 1. Entendemos la arquitectura base
 
+- NextJS
+- Assets en public
+- Estructura un archivo tsx
+
 ### 2. Como funciona el enrutamiento
 
 [Page Router]('https://nextjs.org/docs/pages/building-your-application/routing'),

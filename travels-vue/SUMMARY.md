@@ -1,5 +1,10 @@
 ### 1. Entendemos la arquitectura base
 
+-Vite
+-Vue 3 y CAPI
+-Carpetas
+-Estructura de un archivo Vue
+
 ### 2. Como funciona el enrutamiento
 
 [vue-router](https://router.vuejs.org/) añadiendo la opción de historia: createWebHistory. Esto nos permite que la url cambie cuando navegamos y también poder navegar escribiendo una url en el navegador.
@@ -181,6 +186,14 @@ import { myTravels } from '../data/Travel';
 ```
 
 ### 5. Vamos a añadir lógica y validaciones al formulario.
+
+<input
+    v-model="currentTravel.country"
+    class="travel-edit__row-field"
+    type="text"
+    id="country"
+    name="country"
+  />
 
 **src/types/Travel.ts**
 
