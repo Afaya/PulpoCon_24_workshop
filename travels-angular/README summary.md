@@ -898,12 +898,18 @@ Por ello modificaremos nuestro método `onSave` para cuando lo pulsemos guardar 
             this.currentTravel.image = newUpdateTravel.image;
           }
 
-          this.routerHelper.goTo(URLS.LIST);
+          //this.routerHelper.goTo(URLS.LIST);
         }
       }
   ```
 
-Por último, nos gustaría que al añadir/editar volviese a la página del listado, así que deberemos de nuevo trabajar con el router.navigate pero ¿para qué repetir código?. Así que vamos a ir a la home, coger el método de goTo y llevarlo a un helper.
+Por último, nos gustaría que al añadir/editar volviese a la página del listado, añadiremos el siguiente código, acordarow de importar en enum URLS el router y este ultimo añadirlos al constructor.
+
+```typescript
+this.router.navigate([URLS.LIST]);
+```
+
+Como veis deberemos de nuevo trabajar con el router.navigate pero ¿para qué repetir código?. Así que vamos a ir a la home, coger el método de goTo y llevarlo a un helper.
 
 - En la carpeta `app` creamos una carpeta `helpers` y dentro crearemos el servicio `router.service.ts`, (se puede crear via comando `ng g service routerHelper`)
 
