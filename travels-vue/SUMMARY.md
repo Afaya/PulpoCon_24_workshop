@@ -84,6 +84,8 @@ export const myTravels: ITravel[] = [
 import { myTravels } from '../../data/Travel';
 import { ITravel } from '../../types/Travel';
 import { computed, withDefaults, defineProps, defineModel } from 'vue';
+import router from '../../router';
+import { URLS } from '../../data/Urls';
 
 interface TravelDetail {
   modelValue: ITravel;
@@ -159,7 +161,6 @@ const onEdit = () => router.push(`${URLS.EDIT}${currentTravel.value.id}`);
 <script setup lang="ts">
 import { TravelDetail } from '../components/TravelDetail';
 import { myTravels } from '../data/Travel';
-import { ITravel } from '../types/Travel';
 </script>
 
 <template>
@@ -228,9 +229,6 @@ import { defaultTravel, TravelTypeOptions } from '../data/Travel';
 import { ref, onMounted, computed } from 'vue';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
-import { useRoute } from 'vue-router';
-import { navigateTo } from '../helpers/routes';
-import { URLS } from '../data/AppUrls';
 
 const { errors, meta, defineField } = useForm({
   validationSchema: yup.object({
@@ -499,19 +497,6 @@ const myTravels = computed(() => useTravel.travelList);
 
 **src/views/TravelEdition.vue**
 
-**botón edit**
-
-```typescript
-import router from '../../router';
-import { URLS } from '../../data/AppUrls';
-
-const onEdit = () => router.push(`${URLS.EDIT}${currentTravel.value.id}`);
-```
-
-```html
-<button class="travel-detail__actions-edit" @click="onEdit">Edit</button>
-```
-
 **coger id de url**
 
 ```typescript
@@ -544,9 +529,13 @@ const getTravel = (currentId: number) => {
 **src/views/TravelEdition.vue**
 
 ```typescript
+import { URLS } from '../data/Urls';
+import router from '../router';
+
 const onSave = () => {
   if (!errors.value.length && currentTravel.value) {
     updateData();
+    router.push(URLS.LIST);
   }
 };
 ```
@@ -563,41 +552,6 @@ const updateData = () => {
 };
 ```
 
-**src/helpers/routes.ts**
-
-```typescript
-import { URLS } from '../data/Urls';
-import router from '../router';
-
-export const navigateTo = (url: string) => {
-  router.push(url);
-};
-```
-
-**src/views/Home.vue**
-
-```vue
-<script setup lang="ts">
-import { navigateTo } from '../helpers/routes';
-
-const goTo = (pageUrl: string) => navigateTo(pageUrl);
-</script>
-```
-
-**src/views/TravelEdition.vue**
-
-```typescript
-import { URLS } from '../data/Urls';
-import { navigateTo } from '../helpers/routes';
-
-const onSave = () => {
-  if (!errors.value.length && currentTravel.value) {
-    updateData();
-    navigateTo(URLS.LIST);
-  }
-};
-```
-
 ### 8. Crea la funcionalidad de cancelar cambios.
 
 **src/views/TravelEdition.vue**
@@ -608,7 +562,7 @@ const travelFromList = ref<ITravel>();
 
 ```typescript
 const getTravel = (currentId: number) => {
-  travelFromList.value = structuredClone(defaultTravel);
+  travelFromList.value = defaultTravel;
 
   if (currentId > 0) {
     travelFromList.value =
@@ -659,3 +613,4 @@ const updateData = () => {
 - Testing
 - Revisar la accesibilidad y añadir las ARIAs necesarias.
 - Revisar que son los composables
+- Añadir el helper para el router.push
