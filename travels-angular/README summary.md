@@ -1,23 +1,18 @@
 ## Paso a paso taller
 
 ### 1. Entendemos la arquitectura base
-
 ### 2. Como funciona el enrutamiento
-
 ### 3. Añade funcionalidad a los botones de la Home
 
-Comenzamos con algo sencillo, como hemos visto antes, podríamos enlazar desde la Home tanto la pantalla del listado de viajes. Como la de añadir uno nuevo con un elemento de tipo `RouterLink`, pero como lo que queremos es que sea un botón y que tenga esta apariencia, vamos a usar un botón. 
+Vamos con el paso a paso de hacer funcionar el botón "Ver viajes" en la Home:
 
-
-Vamos con el paso a paso de hacer funcionar el botón "Ver viajes":
-
-1. En primer lugar necesitamos que el botón detecte el evento click. En angular los eventos se indican encerrandolos entre parentesis, en este caso seria:
+1. En primer lugar necesitamos que el botón detecte el evento click:
 
 ```html
-<button class="home__actions-btn" (click)="goTo('travels')">Ver viajes</button>
+  <button class="home__actions-btn" (click)="goTo('travels')">Ver viajes</button>
 ```
 
-2. Ahora necesitamos crear ese método dentro de nuestro component de la home, para ello declaramos nuestro método de la siguiente manera:
+2. Ahora necesitamos crear ese método dentro de nuestro component de la home:
 
 ```typescript
   goTo(url: string): void {
@@ -27,7 +22,7 @@ Vamos con el paso a paso de hacer funcionar el botón "Ver viajes":
 
 3. Si ejecutamos ahora nuestra aplicación podremos ver por consola el mensaje que hemos escrito cuando hacemos click en el botón.
 
-4. Ahora vamos a crear un enumerado con las rutas apropiadas según el parámetro que pasemos. Esto puede ser un dato que se use en varias pantallas o componentes, así que lo mejor será crearlo en un sitio compartido. Así que dentro de la carpeta app, vamos a crear la carpeta data y dentro el archivo `urls.ts`. En el crearemos el enumerado de strings:
+4. Ahora vamos a crear un enumerado con las rutas apropiadas según el parámetro que pasemos. Esto puede ser un dato que se use en varias pantallas o componentes, así que lo mejor será crearlo en un sitio compartido. Así que dentro de la `carpeta app`, vamos a crear la carpeta `data` y dentro el archivo `urls.ts`. En el crearemos el enumerado de strings:
 
 ```typescript
 export enum URLS {
@@ -60,12 +55,7 @@ Deberemos crear una propiedad en el componente para usar el enum en nuestro html
   }
 ```
 
-6. Vamos a añadir el evento click al otro botón, con su enumerado específico (acuerdate de modificar el 'travels' del anterior botón por un valor correcto del enumerado):
-
-```html
-<button class="home__actions-secondary-btn" (click)="goTo(urlsEnum.ADD)">Nuevo viaje</button>
-```
-
+6. Vamos a añadir el evento click al otro botón, con su enumerado específico (acuerdate de modificar el 'travels' del anterior botón por un valor correcto del enumerado)
 7. El archivo home.component.html al final nos quedará así:
 
 ```html
@@ -116,7 +106,7 @@ Lo primero de todo, vamos a ver que tenemos en el listado. Partimos de que llama
 </div>
 ```
 
-Si vemos el componente TravelDetail veremos que tenemos en el html introducidos los datos, "a piñón". Así que lo primero que vamos a hacer es crearnos un archivo con los datos de inicio, los cuales vamos a tipar. Así que vamos a comenzar por añadir en la carpeta `app` la carpeta `types` junto la carpeta `data`. Dentro de ambas carpetas añadimos el archivo travel.ts. En el de types, creamos la siguiente interfaz:
+Si vemos el html del componente TravelDetail veremos que tenemos en el html introducidos los datos, "a piñón". Así que lo primero que vamos a hacer es crearnos un archivo con los datos de inicio, los cuales vamos a tipar. Así que vamos a comenzar por añadir en la carpeta `app` la carpeta `types` junto la carpeta `data`. Dentro de ambas carpetas añadimos el `archivo travel.ts`. En el de types, creamos la siguiente interfaz:
 
 ```typescript
 export interface ITravel {
@@ -149,7 +139,7 @@ export const myTravels: ITravel[] = [
 ];
 ```
 
-El siguiente paso es vincular los datos del objeto con los campos del HTML en el fichero `travel-detail.component.html`. Así que primero (momentáneamente porque luego los vamos a traer del listado), importamos el objeto desde el archivo ts en el fichero `travel-detail.component.ts`. Vamos a crear una variable que contenga el primer viaje de nuestro listado y para la fecha usaremos una [pipe de fecha](https://angular.dev/api/common/DatePipe?tab=usage-notes).
+El siguiente paso es vincular los datos del objeto con los campos del HTML en el fichero `travel-detail.component.html`. Importamos el objeto desde el archivo ts en el fichero `travel-detail.component.ts`. Vamos a crear una variable que contenga el primer viaje de nuestro listado y para la fecha usaremos una [pipe de fecha](https://angular.dev/api/common/DatePipe?tab=usage-notes).
 
 Quedaria de momento así el fichero `travel-detail.component.ts`:
 
@@ -171,32 +161,9 @@ export class TravelDetailComponent {
 }
 ```
 
-Ahora ya sólo nos queda vincular el HTML con los datos del componente y como sabrás, cada framework tiene su sintaxis.
-
-Para el caso de angular haremos lo siguiente:
+Ahora ya sólo nos queda vincular el HTML con los datos del componente.
 
 - Usaremos la propiedad `currentTravel` rodeada por doble llaves tanto para asignarlo a la propiedad `src` de la tag de imagen como para el texto que va en los span:
-
-```html
-<img alt="imagen de viaje" class="travel-detail__image" src="{{currentTravel.image}}" />
-```
-
-```html
-<div class="travel-detail__text-wrapper">
-  <span class="travel-detail__main-text">Country:</span>
-  <span>{{currentTravel.country}}</span>
-</div>
-```
-
-- Para la fecha como comentamos usaremos la pipe de date de la siguiente manera:
-
-```html
-<div class="travel-detail__text-wrapper">
-  <span class="travel-detail__main-text">Date:</span>
-  <span>{{currentTravel.date| date:"short"}}</span>
-</div>
-```
-
 Con esto ya puedes completar todas las propiedades, nos quedaría algo asi el html.
 
 ```html
@@ -219,7 +186,7 @@ Con esto ya puedes completar todas las propiedades, nos quedaría algo asi el ht
 
   <div class="travel-detail__text-wrapper">
     <span class="travel-detail__main-text">Date:</span>
-    <span>{{currentTravel.date| date:"dd/MM/yyyy hh:mm a"}}</span>
+    <span>{{currentTravel.date | date:"dd/MM/yyyy hh:mm a"}}</span>
   </div>
 
   <div class="travel-detail__text-wrapper travel-detail__text-wrapper--description">
@@ -229,11 +196,9 @@ Con esto ya puedes completar todas las propiedades, nos quedaría algo asi el ht
 </div>
 ```
 
-Si ejecutas, verás que no ha cambiado la visualización pero ahora ya está cogiendo los datos del objeto. De todas formas, realmente no lo podemos dejar así, sino que TravelDetail deberá recibir los datos mediante una propiedad, para poder reusarlo con cada viaje.
+TravelDetail deberá recibir los datos mediante una propiedad, para poder reusarlo con cada viaje.
 
-A continuación lo que haremos sera modificar el componente para recibir una propiedad desde el elemento padre que lo instancie.
-
-Para ello en angular se usa el [binding](https://angular.dev/guide/templates/two-way-binding#), el binding puede ser bidireccional. Uno el que recibe información y otro el que la emite y asi manejar propiedades y eventos.
+A continuación lo que haremos sera modificar el componente para recibir una propiedad desde el elemento padre que lo instancie usando el binding.
 
 Así que vamos a definirle las propiedades que va a recibir. Para ello usaremos la tag reservada `@Input()` para indicar que recibiremos un objeto de tipo `ITravel`
 
@@ -242,10 +207,6 @@ Así que vamos a definirle las propiedades que va a recibir. Para ello usaremos 
 ```
 
 Tenemos que recordar importar `Input` desde la libreria core de angular:
-
-```typescript
-import { Component, Input } from "@angular/core";
-```
 
 Nos quedaría asi el componente:
 
@@ -266,11 +227,7 @@ export class TravelDetailComponent {
 }
 ```
 
-Ahora nos falta pasarle el viaje concreto al componente desde el componente travel-list, como en este tendremos un listado de viajes deberemos generar 'x' componentes de travel-detail como elemento de viaje tengamos en la lista, para ello en angular lo podemos hacer de la siguiente manera:
-
-- Usando la directiva [NgFor](https://angular.dev/api/common/NgFor?tab=usage-notes)
-
-- Usando el nuevo sistema de ([Condicionales y bucles en angular](https://angular.dev/essentials/conditionals-and-loops)) mediante `@for`
+Ahora nos falta pasarle el viaje concreto al componente desde el componente travel-list, como en este tendremos un listado de viajes deberemos generar 'x' componentes de travel-detail como elemento de viaje tengamos en la lista, para ello usaremos `@for`
 
 Para comenzar importaremos en el componente `travel-list.component.ts` el fichero `myTravels` con el listado de viajes.
 
@@ -292,31 +249,7 @@ export class TravelListComponent {
 }
 ```
 
-Ahora modificaremos el html en `travel-list.component.html` 
-
-- Usando `@for`:
-
-Para este caso no necesitamos añadir ningún import en el componente por lo que este lo deberiamos tener como sigue:
-
-```typescript
-import { Component } from "@angular/core";
-import { TravelDetailComponent } from "../../components/travel-detail/travel-detail.component";
-import { ITravel } from "../../types/travel";
-import { myTravels } from "../../data/travel";
-
-@Component({
-  selector: "app-travel-list",
-  standalone: true,
-  imports: [TravelDetailComponent],
-  templateUrl: "./travel-list.component.html",
-  styleUrl: "./travel-list.component.scss",
-})
-export class TravelListComponent {
-  travelList: ITravel[] = myTravels;
-}
-```
-
-En nuestro html, `travel-list.component.html`, usaremos el @for de la siguiente manera:
+Ahora modificaremos el html en `travel-list.component.html` usando `@for`:
 
 ```html
 <div class="travel-list">
@@ -334,14 +267,15 @@ En nuestro html, `travel-list.component.html`, usaremos el @for de la siguiente 
 </div>
 ```
 
-- El `@empty` es opcional pero podemos ver que de la forma actual es más facil el controlar el mensaje si el listado estuviera vacio.
+- El `@empty` es opcional.
 
 Con esto si ejecutas verás que ya funciona a la perfección. Pruébalo añadiendo un nuevo viaje al archivo data.
 
-### 5. Vamos a añadir lógica y validaciones al formulario.
+### 5. Vamos a añadir la lógica del formulario con sus validaciones.
 
 Para ello comenzaremos trabajando en el componente de `travel-edition`.
-Lo idóneo es que tuviésemos el formulario en otro componente aparte, pero para este taller vamos a simplificar y dejarlo en la misma vista. Lo primero que vamos a necesitar son variables en las que guardar los datos del formulario, así que vamos a crear un objeto de tipo IDate que se inicializará con un valor por defecto vacío y también un tipo de viaje. Así que antes de nada vamos a crear en el archivo `app/data/travel.ts`, un objeto ITravel vacío:
+Lo primero que vamos a necesitar son variables en las que guardar los datos del formulario.
+Así que antes de nada vamos a crear en el archivo `app/data/travel.ts`, un objeto ITravel vacío:
 
 ```typescript
 export const defaultTravel: ITravel = {
@@ -368,7 +302,7 @@ import { ITravel } from "../../types/travel";
 import { defaultTravel } from "../../data/travel";
 ```
 
-- Antes de continuar para facilitarnos a lo largo del tiempo el trabajo, haremos algunos cambios para cambiar el formulario actual al uso de un formulario de angular. En angular existen dos tipos de [formulario](https://angular.dev/guide/forms) pero en nuestro caso usaremos el [formulario de tipo reactivo](https://angular.dev/guide/forms/reactive-forms) junto un `grupo de formulario` que tiene más sentido al editar las propiedades de un objeto; para ello haremos los siguientes pasos:
+-  Haremos uso del formulario reactivo de angular usando un grupo de formulario:
 
   - Importaremos el modulo para el formulario reactivo `ReactiveFormsModule` añadiendolo en la seccion de `imports` de nuestro componente `travel-edition.component.ts`.
 
@@ -397,34 +331,66 @@ import { defaultTravel } from "../../data/travel";
     });
     ```
 
-    Al crear cada FormControl estamos usando el currentTravel que seria el viaje por defecto para inicializar cada propiedad del formulario.
-
   - Ahora tenemos que relacionar cada input en nuestro form del html con cada una de las anteriores propiedades del formulario, para ello usaremos `formControlName`, por ejemplo:
 
     ```html
-    <input class="travel-edit__row-field" type="text" id="city" name="city" formControlName="city" />
+   <div class="travel-edit__row">
+    <label for="country">País:</label>
+
+    <input
+      class="travel-edit__row-field"
+      type="text"
+      id="country"
+      name="country"
+      formControlName="country"
+    />
+  </div>
+
+  <div class="travel-edit__row">
+    <label for="city">Ciudad:</label>
+
+    <input
+      class="travel-edit__row-field"
+      type="text"
+      id="city"
+      name="city"
+      formControlName="city"
+      required
+    />
+  </div>
+
+  <div class="travel-edit__row">
+    <label for="date">Fecha:</label>
+
+    <input
+      class="travel-edit__row-field"
+      type="date"
+      id="date"
+      name="date"
+      formControlName="date"
+      required
+    />
+  </div>
+
+  <div class="travel-edit__row">
+    <label for="description">Descripción:</label>
+
+    <textarea
+      class="travel-edit__row-field"
+      type="text"
+      id="description"
+      name="description"
+      rows="20"
+      formControlName="description"
+    ></textarea>
+  </div>
     ```
+(podemos añadir el atributo `required` en cada elemento input para mantener los temas de accesiblidad):
 
 Ahora que tenemos lo básico del formulario montado, vamos a pensar... ¿qué necesitamos hacer con el combo?
 Por un lado, no es una propiedad que se guarde en el objeto, el tipo de viaje, sino que es una propiedad que sirve para saber que tipo de foto asociar: playa, campo o ciudad.
 
-Así que vamos a vincular el combo con la propiedad currentType que hemos creado; para ello usaremo la propiedad `ngModel` de angular e indicandole que sera bidireccional el binding de esta (deberemos sacar el select del formulario para evitar errores de conflicto entre el uso del ngModel y el form). Quedaria algo así:
-
-```html
-<select [(ngModel)]="currentType" class="travel-edit__row-field" name="select"></select>
-```
-
-Y en el componente `travel-edition.component.ts` deberemos añadir a los imports del componente el modulo `FormsModule` e importarlo.
-
-```typescript
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-```
-
-```typescript
-imports: [ReactiveFormsModule, FormsModule];
-```
-
-Ahora añadiremos más opciones la combo; lo primero es crear un tipo para el objeto opción, así que vamos a `app/types` y creamos el archivo `general.ts` con la siguiente interfaz:
+Antes añadiremos más opciones al combo; lo primero es crear un tipo para el objeto opción, así que vamos a `app/types` y creamos el archivo `general.ts` con la siguiente interfaz:
 
 ```typescript
 export interface ComboboxOption {
@@ -460,82 +426,23 @@ Ahora que ya las tenemos, vamos crearnos una propiedad en nuestro componente par
   travelTypeOptions: ComboboxOption[] = TravelTypeOptions;
 ```
 
-Acordaros de importar `TravelTypeOptions`:
-
-```typescript
-import { defaultTravel, TravelTypeOptions } from "../../data/travel";
-```
-
 Ahora como ya hicimos anteriormente usando el `@for` de angular en nuestro html crearemos un bucle para generar en nuestro combo las diferentes opciones, quedando asi el select:
 
 ```typescript
-  <select [(ngModel)]="currentType" class="travel-edit__row-field" name="select">
+  <select class="travel-edit__row-field" name="select">
     @for (option of travelTypeOptions; track option.id) {
     <option [value]="option.id">{{option.value}}</option>
     }
   </select>
 ```
 
-Supuestamente ya tenemos vinculados los distintos campos con el formulario pero ¿cómo lo comprobamos? Pues vamos a añadir "funcionalidad" a los botones.
-
-En este caso con el formulario de angular según tenemos declarados los dos botones del formulario con sus type es suficiente al tener el de type `reset` y el de type `submit` en cuanto se pulsen el formulario de angular reseteara los campos o lanzara la llamada a la accion asignada en el `ngSubmit` del form.
-
-- Para ello haremos lo siguiente:
-
-  - Indicaremos la opción para guardar el formulario, para ello añadimos `(ngSubmit)="onSubmit()"` en la etiqueta `<form`:
-
-    ```html
-    <form [formGroup]="travelForm" (ngSubmit)="onSave()" class="travel-edit"></form>
-    ```
-
-  - Crearemos la funcion `onSave()` en nuestro componente así inicialmente:
-
-    ```typescript
-      onSave(): void {
-        console.info(`Ha actualizado el viaje ${this.travelForm.value} con el tipo de image ${this.currentType}`);
-      }
-    ```
-
-Ahora si lo pruebas, verás que al apretar alguno de los dos botones, tenemos la funcionalidad que esperamos.
-
-Pero, ¿no sería interesante tener validaciones?, para ello nos apoyaremos en angular.
-
-Lo primero que podemos hacer es modificar el botón submit para que se deshabilite si en el formulario hay algún error; para ello añadiremos `[disabled]="!travelForm.valid"` al botón.
-
-```html
-<button [disabled]="!travelForm.valid" class="travel-edit__actions-btn" type="submit">Guardar</button>
-```
-
-Ahora que ya lo tenemos, vamos a decidir que validaciones ponemos. Las esenciales serían las de campos obligatorios que en nuestro caso en el objeto tenemos que deben ser la fecha y la ciudad.
-
-Añadiremos también el tipo y vamos a probar a poner que la ciudad necesite al menos 3 caracteres.
-
-Así que vamos a importar `Validators` de angular forms al componente.
-
-```typescript
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-```
-
-- Añadiremos las validaciones de `required` a las propiedades de fecha y ciudad, para ello le pasaremos el parametro `Validators.required` cuando creamos los objetos `FormControl`, (podemos añadir el atributo `required` en cada elemento input para mantener los temas de accesiblidad):
-
-```typescript
-  city: new FormControl(this.currentTravel.city, Validators.required),
-  date: new FormControl(this.currentTravel.date, Validators.required),
-```
-
-- Añadiremos ahora la validación de 3 caracteres minimo al campo ciudad, como ya teniamos la de Required, al tener que indicarle más de una al crear el objeto FormControl se le pasara un array con validaciones. Para indicar la longitud minima usaremos ` Validators.minLength(3)` quedando así:
-
-  ```typescript
-    city: new FormControl(this.currentTravel.city, [Validators.required, Validators.minLength(3)]),
-  ```
-
-- Para añadir validaciones al campo tipo de viaje, lo convertiremos tambien en un `FormControl` pero que estara fuera del formulario:
+- Lo convertiremos tambien en un `FormControl` pero que estara fuera del grupo del formulario:
 
   ```typescript
   travelType = new FormControl("", Validators.required);
   ```
 
-  Le añadimos ahora a la tag del select `[formControl]="travelType"` para relacionarlo con el FormControl y eliminamos la propiedad `ngModel` que se habia incluido antes. Quedaria algo así:
+  Le añadimos ahora a la tag del select `[formControl]="travelType"` para relacionarlo con el FormControl, Quedaria algo así:
 
   ```html
   <select [formControl]="travelType" class="travel-edit__row-field" name="select">
@@ -545,15 +452,31 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   </select>
   ```
 
-  Y podemos volver a incluir el select dentro del form del html y eliminar el modulo `FormsModule` como la propiedad que teniamos llamda `currentType` de nuestro componente.
+Supuestamente ya tenemos vinculados los distintos campos con el formulario pero ¿cómo lo comprobamos? Pues vamos a añadir "funcionalidad" a los botones.
 
-  Modificaremos el método `onSave()` para poder visualizar el dato del tipo de viaje reemplazando `this.currentType` por `this.travelType.value`.
+En este caso con el formulario de angular según tenemos declarados los dos botones del formulario con sus type  `reset` y  `submit` es suficiente en cuanto se pulsen el formulario de angular reseteara los campos o lanzara la llamada a la accion asignada en el `ngSubmit` del form.
 
-  Modificaremos el bóton submit para que tenga en cuenta las validaciones del tipo de viaje para que lo deshabilite añadiendo `|| !travelType.valid`:
+- Para ello haremos lo siguiente:
 
-  ```html
-  [disabled]="!travelForm.valid || !travelType.valid"
-  ```
+  - Indicaremos la opción para guardar el formulario, para ello añadimos `(ngSubmit)="onSave()"` en la etiqueta `<form`:
+
+    ```html
+    <form [formGroup]="travelForm" (ngSubmit)="onSave()" class="travel-edit"></form>
+    ```
+
+  - Crearemos la funcion `onSave()` en nuestro componente:
+
+    ```typescript
+      onSave(): void {
+        console.info(`Ha actualizado el viaje ${this.travelForm.value} con el tipo de image ${this.travelType.value}`);
+      }
+    ```
+
+Ahora modificamos el botón submit para que se deshabilite si en el formulario hay algún error; para ello añadiremos `[disabled]="!travelForm.valid || !travelType.valid"` al botón.
+
+```html
+<button [disabled]="!travelForm.valid" class="travel-edit__actions-btn" type="submit">Guardar</button>
+```
 
 Además para enterarnos de que hay errores, vamos a poner debajo de los botones un mensaje de texto que sólo se muestre si hay errores. Para esto usaremos la sintaxis de condicionales de angular usando `@if`:
 
@@ -563,7 +486,7 @@ Además para enterarnos de que hay errores, vamos a poner debajo de los botones 
 }
 ```
 
-Crearemos la clase \_\_error, que tenga color y border-color (porque la aprovecharemos para los componentes) de valor "red", lo añadiremos a `travel-edition.component.scss`:
+Crearemos la clase \_\_error, que tenga color y border-color, lo añadiremos a `travel-edition.component.scss`:
 
 ```css
 &__error {
@@ -575,14 +498,76 @@ Crearemos la clase \_\_error, que tenga color y border-color (porque la aprovech
 Para aplicar esta clase a nuestros campos del formulario que tengan validaciones modificaremos los input en el html para añadirle la clase anterior de forma condicional según tengan errores o no con `[ngClass]="{'travel-edit__error': travelForm.controls['city'].invalid}"` quedando asi:
 
 ```html
-<input class="travel-edit__row-field" [ngClass]="{'travel-edit__error': travelForm.controls['city'].invalid}" type="text" id="city" name="city" formControlName="city" required /> <input class="travel-edit__row-field" [ngClass]="{'travel-edit__error': travelForm.controls['date'].invalid}" type="date" id="date" name="date" formControlName="date" required />
+  <div class="travel-edit__row">
+    <label for="country">País:</label>
+
+    <input
+      class="travel-edit__row-field"
+      type="text"
+      id="country"
+      name="country"
+      formControlName="country"
+    />
+  </div>
+
+  <div class="travel-edit__row">
+    <label for="city">Ciudad:</label>
+
+    <input
+      class="travel-edit__row-field"
+      [ngClass]="{ 'travel-edit__error': travelForm.controls['city'].invalid }"
+      type="text"
+      id="city"
+      name="city"
+      formControlName="city"
+      required
+    />
+  </div>
+
+  <div class="travel-edit__row">
+    <label for="date">Fecha:</label>
+
+    <input
+      class="travel-edit__row-field"
+      [ngClass]="{ 'travel-edit__error': travelForm.controls['date'].invalid }"
+      type="date"
+      id="date"
+      name="date"
+      formControlName="date"
+      required
+    />
+  </div>
+
+  <div class="travel-edit__row">
+    <label for="description">Descripción:</label>
+
+    <textarea
+      class="travel-edit__row-field"
+      type="text"
+      id="description"
+      name="description"
+      rows="20"
+      formControlName="description"
+    ></textarea>
+  </div>
 ```
 
 En el caso del tipo de viaje al ser directamente un FormControl quedaria así:
 
 ```html
-<select [formControl]="travelType" class="travel-edit__row-field" [ngClass]="{'travel-edit__error': travelType.invalid}" name="select" required></select>
+    <select
+      [formControl]="travelType"
+      class="travel-edit__row-field"
+      [ngClass]="{'travel-edit__error': travelType.invalid }"
+      name="select"
+      required
+    >
+      @for (option of travelTypeOptions; track option.id) {
+      <option [value]="option.id">{{ option.value }}</option>
+      }
+    </select>
 ```
+Import `NgClass` 
 
 Anteriormente habiamos introducido funcionalidad para deshabilitar el botón, ahora para que se distinga que el botón está deshabilitado añadimos los estilos de disabled a los del actions-btn en `travel-edition.component.scss`:
 
@@ -600,10 +585,10 @@ Anteriormente habiamos introducido funcionalidad para deshabilitar el botón, ah
 
 ### 6. ¿Y si queremos editar? Vincula con los datos recibidos.
 
-Antes de comenzar a vincular el formulario con los datos recibidos... ¿No estaría bien tener los datos almacenados en el frontend durante la sesión? Para ello y para facilitar el código nos haremos un propio store en angular apoyandonos en `rxjs`.
+Para tener datos almacenados en el frontend durante la sesión nos haremos un propio store en angular apoyandonos en `rxjs`.
 
 - Lo primero dentro de la carpeta app nos creamos una nueva carpeta `store`
-- Dentro de la carpeta store nos creamos un fichero llamado `store.service.ts`, podemos colocarnos por terminal en la carpeta y usar angular cli para ello `ng g service Store`, esto nos creara el fichero para el store y para los test del mismo. Una vez creado `store.service.ts` su contenido deberia ser:
+- Dentro de la carpeta store nos creamos un fichero llamado `store.service.ts`, podemos crearlo usando angular cli para ello `ng g service Store`, esto nos creara el fichero para el store y para los test del mismo. Una vez creado `store.service.ts` su contenido deberia ser:
 
   ```typescript
   import { Injectable } from "@angular/core";
@@ -649,6 +634,16 @@ Antes de comenzar a vincular el formulario con los datos recibidos... ¿No estar
       this.travelListStore.next(newTravelList);
     }
   ```
+
+* Ahora crearemos un get que nos retorne el viaje que coincida en la lista de viajes con el id pasado por parametro.
+
+  ```typescript
+    getTravelById(id: number): ITravel | undefined {
+      return this.travelListStore.value.find(travel => travel.id === id);
+    }
+  ```
+
+* 
 
 Una vez que ya lo tenemos, vamos a usarlo. En primer lugar nos vamos al listado de viajes, `src/app/views/travel-list/travel-list.component.ts` y aquí en lugar de importar los viajes del archivo data, nos lo vamos a traer del store.
 
@@ -738,7 +733,7 @@ Ahora lo que queremos es poder editar un viaje, para eso en `src/app/components/
 
 Será similar a lo que hicimos en la home, usando el router y su método navigate. En este caso además de la url como parametro le pasaremos el id del viaje.
 
-- Creamos la funcion `onEdit`:
+- Creamos la funcion `goTo`:
 
   ```typescript
       goTo(): void {
@@ -803,13 +798,7 @@ Y por otro lado modificaremos el store para recuperar un viaje por id y actualiz
     }
   ```
 
-- Ahora añadiremos al constructor `private storeService: StoreService` para acceder al store y recuperar un viaje por id; para esto añadiremos en `store.service.ts` un nuevo get que nos retorne el viaje que coincida en la lista de viajes con el id pasado por parametro.
-
-  ```typescript
-    getTravelById(id: number): ITravel | undefined {
-      return this.travelListStore.value.find(travel => travel.id === id);
-    }
-  ```
+- Ahora añadiremos al constructor `private storeService: StoreService` para acceder al store y recuperar un viaje por id; para esto añadiremos en `store.service.ts` un nuevo 
 
 - Antes de continuar haremos algunas modificaciones en el componente para que `currentTravel` no se le asigne el `defaultTravel` por defecto y asi asignarle más adelante este valor por defecto o el recuperado por id:
 
@@ -890,18 +879,6 @@ Te estarás planteando, que si al funcionar de forma reactiva al cambiar cualqui
 
 Por ello modificaremos nuestro método `onSave` para cuando lo pulsemos guardar los cambios del formulario actualizados en el objeto recuperado o añadir el objeto si se trata de uno nuevo.
 
-- Antes en el store crearemos un nueva funcion `addTravel` para añadir un nuevo viaje al listado.
-
-  ```typescript
-    addTravelList(newTravelList: ITravel): void {
-      const newId = Math.max(...this.travelListStore.value.map(travel => { return travel.id })) + 1;
-      newTravelList.id = newId;
-      this.travelListStore.value.push(newTravelList);
-    }
-  ```
-
-- Luego modificaremos el `onSave`:
-
   ```typescript
       onSave(): void {
         if (this.travelForm && this.travelForm.value) {
@@ -926,7 +903,7 @@ Por ello modificaremos nuestro método `onSave` para cuando lo pulsemos guardar 
       }
   ```
 
-Por último, nos gustaría que al añadir/editar volviese a la página al listado, así que deberemos de nuevo trabajar con el router.navigate pero ¿para qué repetir código?. Así que vamos a ir a la home, coger el método de goTo y llevarlo a un helper.
+Por último, nos gustaría que al añadir/editar volviese a la página del listado, así que deberemos de nuevo trabajar con el router.navigate pero ¿para qué repetir código?. Así que vamos a ir a la home, coger el método de goTo y llevarlo a un helper.
 
 - En la carpeta `app` creamos una carpeta `helpers` y dentro crearemos el servicio `router.service.ts`, (se puede crear via comando `ng g service routerHelper`)
 
